@@ -1,6 +1,10 @@
 package link
 
-import "errors"
+import (
+	"bytes"
+	"errors"
+	"fmt"
+)
 
 /*
 双向链表（带哨兵）
@@ -61,13 +65,15 @@ func (d *DoublyLinkedListSentinel) RemoveFirst() {
 	}
 }
 
-func (d *DoublyLinkedListSentinel) RemoveLast() {
+func (d *DoublyLinkedListSentinel) RemoveLast() int {
 	if d.tail.prev != d.head {
 		removed := d.tail.prev
 		prev := removed.prev
 		prev.next = d.tail
 		d.tail.prev = prev
+		return removed.value
 	}
+	return -1
 }
 
 func (d *DoublyLinkedListSentinel) Remove(index int) error {
@@ -89,5 +95,19 @@ func (d *DoublyLinkedListSentinel) Remove(index int) error {
 func (d *DoublyLinkedListSentinel) Each(f func(i, v int)) {
 	for i, p := 0, d.head.next; p != d.tail; p = p.next {
 		f(i, p.value)
+		i++
 	}
+}
+
+func (d *DoublyLinkedListSentinel) String() string {
+	var buf bytes.Buffer
+	buf.WriteString("[")
+	d.Each(func(i, v int) {
+		if i > 0 {
+			buf.WriteString(",")
+		}
+		buf.WriteString(fmt.Sprint(v))
+	})
+	buf.WriteString("]")
+	return buf.String()
 }
