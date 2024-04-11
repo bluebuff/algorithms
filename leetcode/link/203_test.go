@@ -1,4 +1,4 @@
-package searchbinary
+package link
 
 import (
 	"algorithms/study/entity"
